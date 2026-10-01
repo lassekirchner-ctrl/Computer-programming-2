@@ -13,6 +13,8 @@ import concurrent.futures as future
 from statistics import mean 
 from time import perf_counter as pc
 from functools import reduce 
+import concurrent.futures as future
+import multiprocessing as mp 
 
 # Exc1
 def approximate_pi(n):
@@ -41,8 +43,14 @@ def sphere_volume(n, d):
     dims = [x for x in range (0, d)]
     
     while n_out + n_in != n:
-        temp_position = [random.uniform(-1, 1) for dim in dims]
+        temp_position = [random.uniform(-1, 1) for dim in dims] # list comp. 
+
+        #map takes a function and applies it to every single item in a list, returning a new modified list.
+        #A lambda function is just a shorthand way to write a small, one-line function without giving it a name. 
         squared_temp_pos = list(map(lambda x: x**2, temp_position))
+
+        #reduce() takes a list of items and squashed them down into a single final value
+        # by repeadetly applying a calculation pair-by-pair.
         if reduce(lambda acc, x: x + acc, squared_temp_pos) <= 1: #avstånd mindre än 1 l.e.
             n_in += 1
         else:
@@ -65,7 +73,7 @@ def hypersphere_exact_old(d):
     print(f'The exact volume for a {d} dimensional hypersphere is:') 
     print(calc_vol(d))''' # if the testfunction isnt an okay solution 
 
-def hypersphere_exact(d, n):
+def hypersphere_exact(n, d):
     return (m.pi**((d)/2))/(m.gamma(1+ (d)/2)) ##klarar ej test två, men test två känns stupid 
 
 
@@ -94,11 +102,25 @@ def sphere_volume_numba(n:int, d:int)->float:
 
 
 #Exc4: parallel code - parallelize actual computations by splitting data
-def sphere_volume_parallel2(n, d, np=10):
+def sphere_volume_parallel(n, d, np=10):
     # n is the number of points
     # d is the number of dimensions of the sphere
     # np is the number of processes
-    return 
+    start_time = pc()
+
+    processes = []
+    for _ in range(0, np):
+        p = mp.Process(target=sphere_volume, args=[n, d])
+        processes.append(p)
+    for p in processes:
+        p.start()
+    for p in processes:
+        p.join
+
+   
+    end_time = pc()
+    return print(f'Process took: {round((end_time-start_time), 3)} seconds using paralell computing locally.')
+
     
 def main():
     # Exc1
@@ -145,7 +167,7 @@ def main():
     #test_ex2_new()
 
     # Exc3 ## 
-    def test_ex3():
+    def test_ex3_old():
         n = 1000000
         d = 11
         print('Exc3 analysis')
@@ -181,7 +203,7 @@ def main():
         for i in range (1,4):
             print(f'TIMES FOR call number {i}:')
             inner()
-    better_run_test_exc3()
+    #better_run_test_exc3()
 
     # Exc4
     def test_ex4():
@@ -192,10 +214,30 @@ def main():
         stop = pc()
         print(f"Exc4: Sequential time of {d} and {n}: {stop-start}")
         print("What is parallel time?")
+        sphere_volume_parallel(10**6, 11)
 
-    #test_ex4()
+
+
+    test_ex4()
     
-    
+'''OLD! Example output from paralell computing: 
+(venv) laki0611@gullviva:~/prog2$ cd MA3
+(venv) laki0611@gullviva:~/prog2/MA3$ python3 MA3.py
+Exc3 analysis:
+Using a d = 11 dimensional sphere and n = 1000000.
+TIMES FOR call number 1:
+Sequential: 16.9508 seconds
+Numba: 5.5441 seconds
+TIMES FOR call number 2:
+Sequential: 16.969 seconds
+Numba: 2.7375 seconds
+TIMES FOR call number 3:
+Sequential: 17.3631 seconds
+Numba: 2.6822 seconds
+(venv) laki0611@gullviva:~/prog2/MA3$
+'''
+
+
 
 if __name__ == '__main__':
     main()
