@@ -138,6 +138,22 @@ def sphere_volume_parallel (n, d, np=10):
         return total_vol / np 
 
 
+def sphere_volume_parallel_numba (n, d, np=10):
+    with future.ProcessPoolExecutor() as ex:
+        lst_temp_n = []
+        lst_temp_d = []
+        for i in range(0, np):
+            lst_temp_n.append(n / np)
+            lst_temp_d.append(d)
+    
+        results = ex.map(sphere_volume_numba, lst_temp_n, lst_temp_d)
+
+        total_vol = 0
+        for i in results:
+            total_vol += i
+        return total_vol / np 
+
+
 def main():
     # Exc1
     def test_ex1():
@@ -233,8 +249,11 @@ def main():
         start_paralell = pc()
         sphere_volume_parallel(10**6, 11)
         stop_paralell = pc()
-        print(f'Parallel time is: {round(stop_paralell-start_paralell, 3)} seconds')
-        #print('Example duration using paralell computing on the IT departments machines: 0.048')
+        print(f'Parallel time regular is: {round(stop_paralell-start_paralell, 3)} seconds')
+        start_numba = pc()
+        sphere_volume_parallel_numba(n, d)
+        stop_numba = pc() 
+        print(f'Parallel time numba is: {round(stop_numba-start_numba, 3)} seconds')
 
 
 
@@ -242,8 +261,10 @@ def main():
     
 '''Exc4: Sequential time of 11 and 1000000: 16.234666429983918
 What is parallel time?
-Process took: 0.048 seconds using paralell computing (via gullviva).
+Process took: 1.886 seconds using paralell computing (via gullviva).
 (venv) laki0611@gullviva:~/prog2/MA3$'''
+
+'''with numba: '''
 
 #hejhej
 
