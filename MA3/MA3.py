@@ -102,11 +102,11 @@ def sphere_volume_numba(n:int, d:int)->float:
 
 
 #Exc4: parallel code - parallelize actual computations by splitting data
-def sphere_volume_parallel(n, d, np=10):
+def sphere_volume_parallel_using_mp(n, d, np=10):
     # n is the number of points
     # d is the number of dimensions of the sphere
     # np is the number of processes
-    start_time = pc()
+    #start_time = pc()
 
     processes = []
     for _ in range(0, np):
@@ -115,13 +115,29 @@ def sphere_volume_parallel(n, d, np=10):
     for p in processes:
         p.start()
     for p in processes:
-        p.join
+        p.join()
 
-   
-    end_time = pc()
-    return print(f'Process took: {round((end_time-start_time), 3)} seconds using paralell computing locally.')
+    #end_time = pc()
+    #return print(f'Process took: {round((end_time-start_time), 3)} seconds using paralell computing.')
+    return print(f'Returnerar inget, måste göra om :()')
 
+import concurrent.futures as future
+def sphere_volume_parallel (n, d, np=10):
+    with future.ProcessPoolExecutor() as ex:
+        lst_temp_n = []
+        lst_temp_d = []
+        for i in range(0, np):
+            lst_temp_n.append(n / np)
+            lst_temp_d.append(d)
     
+        results = ex.map(sphere_volume, lst_temp_n, lst_temp_d)
+
+        total_vol = 0
+        for i in results:
+            total_vol += i
+        return total_vol / np 
+
+
 def main():
     # Exc1
     def test_ex1():
@@ -214,30 +230,22 @@ def main():
         stop = pc()
         print(f"Exc4: Sequential time of {d} and {n}: {stop-start}")
         print("What is parallel time?")
+        start_paralell = pc()
         sphere_volume_parallel(10**6, 11)
+        stop_paralell = pc()
+        print(f'Parallel time is: {round(stop_paralell-start_paralell, 3)} seconds')
+        #print('Example duration using paralell computing on the IT departments machines: 0.048')
 
 
 
     test_ex4()
     
-'''OLD! Example output from paralell computing: 
-(venv) laki0611@gullviva:~/prog2$ cd MA3
-(venv) laki0611@gullviva:~/prog2/MA3$ python3 MA3.py
-Exc3 analysis:
-Using a d = 11 dimensional sphere and n = 1000000.
-TIMES FOR call number 1:
-Sequential: 16.9508 seconds
-Numba: 5.5441 seconds
-TIMES FOR call number 2:
-Sequential: 16.969 seconds
-Numba: 2.7375 seconds
-TIMES FOR call number 3:
-Sequential: 17.3631 seconds
-Numba: 2.6822 seconds
-(venv) laki0611@gullviva:~/prog2/MA3$
-'''
+'''Exc4: Sequential time of 11 and 1000000: 16.234666429983918
+What is parallel time?
+Process took: 0.048 seconds using paralell computing (via gullviva).
+(venv) laki0611@gullviva:~/prog2/MA3$'''
 
-
+#hejhej
 
 if __name__ == '__main__':
     main()
