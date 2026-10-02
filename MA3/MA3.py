@@ -254,7 +254,7 @@ def main():
         sphere_volume_parallel_numba(n, d)
         stop_numba = pc() 
         print(f'Parallel time numba is: {round(stop_numba-start_numba, 3)} seconds')
-
+        print('Workload likely to small for numba to be more effective!')
 
 
     test_ex4()
