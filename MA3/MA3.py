@@ -2,8 +2,8 @@
 
 Student:lars kirchner 
 Mail: lasse.kirchner@gmail.com
-Reviewed by:
-Date reviewed:
+Reviewed by: Ivar Hammarberg
+Date reviewed: 2/10/2026
 
 """
 import random
