@@ -88,4 +88,7 @@ def tk_6_text():
     text_box.pack()
     window.mainloop()
 
-tk_6_text()
+#tk_6_text()
+
+str = 'hej'
+print(int(str))
