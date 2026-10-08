@@ -1,9 +1,9 @@
 import tkinter as tk 
+import tkinter.messagebox as messagebox 
 
 ###create error class
 class InputError(Exception):
     pass
-
 
 
 
@@ -55,6 +55,20 @@ def read_inputs():
     return antal, hastighet
 
     
+## create helper function for initiera
+parameters = {} #antal, hastighet
+def initiera():
+    try:
+        antal, hastighet = read_inputs()
+        parameters['antal'] = antal
+        parameters['hastighet'] = hastighet
+        #temprary test:
+        #print(antal, hastighet)
+    except InputError as ie:
+        messagebox.showerror('Invalid input', str(ie))
+
+   
+
 
 ##create buttons 
 
@@ -63,6 +77,7 @@ btn_initiera = tk.Button(
     bg = 'white',
     fg = 'black',
     master= frame_controlpanel, 
+    command = initiera
     )
 btn_initiera.pack(fill = tk.X)
 
