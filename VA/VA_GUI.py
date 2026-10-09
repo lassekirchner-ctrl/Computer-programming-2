@@ -173,8 +173,7 @@ def create_balls():
         ball = Ball()
         balls.append(ball)
         ball.canvas_item_id = canvas_arena.create_oval(ball.x_coordinate - ball.radius, ball.y_coordinate - ball.radius, ball.x_coordinate + ball.radius, ball.y_coordinate + ball.radius, fill = ball.color)
-        print(ball.canvas_item_id)
-
+        #print(ball.canvas_item_id)
 
 ##create buttons 
 
@@ -188,27 +187,51 @@ btn_initiera = tk.Button(
 btn_initiera.pack(fill = tk.X)
 
 
+## starta
+
+def starta():
+    ## call initiera function, add command = starta to start btn
+    pass
+
 btn_starta = tk.Button(
     text='Starta',
     bg = 'white',
     fg = 'black',
     master= frame_controlpanel, 
+    command = starta 
     )
 btn_starta.pack(fill = tk.X)
+
+
+## rensa
+
+def rensa():
+    balls.clear()
+    canvas_arena.delete('all')
+    #print(balls)
+
 
 btn_rensa = tk.Button(
     text='Rensa',
     bg = 'white',
     fg = 'black',
     master= frame_controlpanel, 
+    command = rensa 
     )
 btn_rensa.pack(fill = tk.X)
+
+#avsluta
+
+def avsluta():
+    pass 
+
 
 btn_avsluta = tk.Button(
     text='Avsluta',
     bg = 'white',
     fg = 'Red',
     master= frame_controlpanel, 
+    command = avsluta
     )
 btn_avsluta.pack(fill = tk.X)
 
@@ -258,3 +281,4 @@ def test_overlaps():
         ball3.overlaps(ball1)
 
 #test_overlaps()
+
