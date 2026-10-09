@@ -61,6 +61,13 @@ class Ball():
             self.y_coordinate = self.radius
             #print('BOUNCE top')
 
+    def bounding_box(self):
+        x_0 = self.x_coordinate - self.radius
+        y_0 = self.y_coordinate - self.radius
+        x_1 = self.x_coordinate + self.radius
+        y_1 = self.y_coordinate + self.radius
+        return x_0, y_0, x_1, y_1
+
 
     def overlaps(self, other):
         sum_radii_squared = (self.radius + other.radius) ##avoids root in distance 
@@ -172,7 +179,8 @@ def create_balls():
     for _ in range (parameters['antal']):
         ball = Ball()
         balls.append(ball)
-        ball.canvas_item_id = canvas_arena.create_oval(ball.x_coordinate - ball.radius, ball.y_coordinate - ball.radius, ball.x_coordinate + ball.radius, ball.y_coordinate + ball.radius, fill = ball.color)
+        x_0, y_0, x_1, y_1 = ball.bounding_box()
+        ball.canvas_item_id = canvas_arena.create_oval(x_0, y_0, x_1, y_1, fill = ball.color)
         #print(ball.canvas_item_id)
 
 ##create buttons 
@@ -187,11 +195,75 @@ btn_initiera = tk.Button(
 btn_initiera.pack(fill = tk.X)
 
 
-## starta
+## functions needed to start simulation:
+
+loop_id = None          
+
+def move_all():
+    for ball in balls:
+        ball.move()
+        ball.bounce_wall(size_arena_x, size_arena_y)
+
+def handle_collisions_old():
+    tail = 0
+    head = 1
+    for _ in range(1, len(balls)):
+        ball_tail = balls[tail]
+        ball_head = balls[head]
+        if ball_head.alive == True and ball_tail.alive == True:
+            tail += 1
+            head += 1 
+            if Ball.overlaps(ball_head, ball_tail) == True:
+                Ball.eat(ball_head, ball_tail)
+        else:
+            tail += 1
+            head += 1
+
+def handle_collisions():
+    for outer in range(0, len(balls)):
+        ball_outer = balls[outer]
+        for inner in range (outer, len(balls)): 
+            ball_inner = balls[inner]
+            if ball_outer.alive == True and ball_inner.alive == True:
+                if Ball.overlaps(ball_outer, ball_inner) == True:
+                    Ball.eat(ball_outer, ball_inner)
+    
+
+
+def remove_dead():
+    balls_copy = balls.copy() ##copy list so that we dont need new globale variable
+    balls.clear() #clear og balls 
+    for ball in balls_copy:
+        if ball.alive == False:
+            canvas_arena.delete(ball.canvas_item_id)
+        else:
+            balls.append(ball) ##add survivors to cleared balls 
+    
+
+def reanimate():
+    for ball in balls:
+        canvas_arena.coords(ball.canvas_item_id, *ball.bounding_box())
+        canvas_arena.itemconfigure(ball.canvas_item_id, fill = ball.color)
+    ##ful jävla funktion, är egentligen:
+    #canvas.coord(cikel, *bounding box), alltså uppdateras bara koordinaterna av cirkel
+  
+
+
+def tick():
+    # 1. run the four phases, in order
+    # 2. decide: is there still something to simulate?
+    #       yes -> schedule the next tick, using the delay from parameters,
+    #              and store what after() returns in loop_id
+    #       no  -> do not reschedule; set loop_id back to None; show/print a finish message
+    pass
+
 
 def starta():
-    ## call initiera function, add command = starta to start btn
+    # guard 1: nothing to run if there are no balls (what should the user see?)
+    # guard 2: do not start a second chain if loop_id is already set
+    # otherwise: start the first tick
     pass
+
 
 btn_starta = tk.Button(
     text='Starta',
@@ -236,7 +308,6 @@ btn_avsluta = tk.Button(
 btn_avsluta.pack(fill = tk.X)
 
 
-window.mainloop() #runs an unbroken loop for tinker, i.e. no new prompt appears in terminal
 
 ### tests ###
 
@@ -282,3 +353,5 @@ def test_overlaps():
 
 #test_overlaps()
 
+
+window.mainloop() #runs an unbroken loop for tinker, i.e. no new prompt appears in terminal
