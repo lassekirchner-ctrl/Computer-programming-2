@@ -1,6 +1,7 @@
 import tkinter as tk 
 import tkinter.messagebox as messagebox 
 import random
+from math import sqrt 
 
 
 # create window 
@@ -128,6 +129,25 @@ class Ball():
             #print('BOUNCE top')
 
 
+    def overlaps(self, other):
+        sum_radii_squared = (self.radius + other.radius) ##avoids root in distance 
+        dist_between_centers_squared = (self.x_coordinate - other.x_coordinate)**2 +  (self.y_coordinate - other.y_coordinate)**2
+
+        if self.alive == False or other.alive == False:
+            overlap = False
+            print('dead') #test 2 
+            return overlap
+
+
+        if dist_between_centers_squared < sum_radii_squared:
+            overlap = True
+            print('overlap!') #test 2
+        else:
+            overlap = False
+            print('no overlap') #test 2
+
+        return overlap 
+
 
     def eat(self, other):
         if self.radius > other.radius:
@@ -192,7 +212,7 @@ window.mainloop() #runs an unbroken loop for tinker, i.e. no new prompt appears 
 
 ### tests ###
 
-def test_bounce():
+def test_bounce(): #test __init__ and move aswell
     ball1 = Ball()
     ball2 = Ball()
     ball3 = Ball()
@@ -210,3 +230,26 @@ def test_bounce():
 #to get test bounce to work, remove hashtags in bounce with msg! 
 
 #test_bounce()
+
+def test_overlaps():
+    ball1 = Ball()
+    ball2 = Ball()
+    ball3 = Ball()
+    for i in range (0, 100):
+        ball1.move()
+        ball1.bounce_wall(size_arena_x, size_arena_y)
+        ball1.overlaps(ball2)
+        ball1.overlaps(ball3)
+
+        ball2.move()
+        ball2.bounce_wall(size_arena_x, size_arena_y)
+        ball2.overlaps(ball1)
+        ball2.overlaps(ball3)
+                
+        
+        ball3.move()
+        ball3.bounce_wall(size_arena_x, size_arena_y)
+        ball2.overlaps(ball2)
+        ball2.overlaps(ball1)
+
+#test_overlaps()
