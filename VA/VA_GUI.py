@@ -161,16 +161,19 @@ def initiera():
         parameters['hastighet'] = hastighet
         #temprary test:
         #print(antal, hastighet)
+        create_balls()
     except InputError as ie:
         messagebox.showerror('Invalid input', str(ie))
 
 #create balls and put them on the canvas! 
 balls = []
+#canvas.create_oval(x0, y0, x1, y1, fill=...
 def create_balls():
-    for i in range (0, parameters['antal']):
+    for _ in range (parameters['antal']):
         ball = Ball()
-        balls.append(Ball)
-
+        balls.append(ball)
+        ball.canvas_item_id = canvas_arena.create_oval(ball.x_coordinate - ball.radius, ball.y_coordinate - ball.radius, ball.x_coordinate + ball.radius, ball.y_coordinate + ball.radius, fill = ball.color)
+        print(ball.canvas_item_id)
 
 
 ##create buttons 
