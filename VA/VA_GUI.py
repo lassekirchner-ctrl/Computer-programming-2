@@ -17,7 +17,7 @@ class Ball():
         self.color = 'red'
         self.canvas_item_id = None 
 
-        self.radius = random.randint(5, 30)
+        self.radius = random.randint(5, 25)
 
         self.fart_x = random.randint(-10, 10)
         self.fart_y = random.randint(-10, 10)
@@ -70,7 +70,7 @@ class Ball():
 
 
     def overlaps(self, other):
-        sum_radii_squared = (self.radius + other.radius) ##avoids root in distance 
+        sum_radii_squared = (self.radius + other.radius)**2 ##avoids root in distance 
         dist_between_centers_squared = (self.x_coordinate - other.x_coordinate)**2 +  (self.y_coordinate - other.y_coordinate)**2
 
         if self.alive == False or other.alive == False:
@@ -81,10 +81,10 @@ class Ball():
 
         if dist_between_centers_squared < sum_radii_squared:
             overlap = True
-            print('overlap!') #test 2
+            #print('overlap!') #test 2
         else:
             overlap = False
-            print('no overlap') #test 2
+            #print('no overlap') #test 2
 
         return overlap 
 
@@ -197,7 +197,6 @@ btn_initiera.pack(fill = tk.X)
 
 ## functions needed to start simulation:
 
-loop_id = None          
 
 def move_all():
     for ball in balls:
@@ -248,21 +247,39 @@ def reanimate():
     #canvas.coord(cikel, *bounding box), alltså uppdateras bara koordinaterna av cirkel
   
 
-
+loop_id = None ###behövs för tick och starta
 def tick():
     # 1. run the four phases, in order
     # 2. decide: is there still something to simulate?
     #       yes -> schedule the next tick, using the delay from parameters,
     #              and store what after() returns in loop_id
     #       no  -> do not reschedule; set loop_id back to None; show/print a finish message
-    pass
+    move_all()
+    handle_collisions()
+    remove_dead()
+    reanimate()
+    if len(balls) > 1:
+        loop_id = window.after(parameters['hastighet'], tick)
+        ##window.after(delay_ms, function)
+    else:
+        loop_id = None 
+        messagebox.showinfo('Simulation Finished!')
 
+    
 
 def starta():
     # guard 1: nothing to run if there are no balls (what should the user see?)
     # guard 2: do not start a second chain if loop_id is already set
     # otherwise: start the first tick
-    pass
+    if len(balls) == 0:
+        messagebox.showinfo('Error!', 'Nothing to simulate! Enter values!')
+    else:
+        if loop_id == None:
+            tick()
+        else:
+            messagebox.showinfo('Error!', 'Cannot start a simulation while a current one is ongoing.')
+
+
 
 
 btn_starta = tk.Button(
