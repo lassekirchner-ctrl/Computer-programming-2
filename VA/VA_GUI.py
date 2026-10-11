@@ -311,12 +311,6 @@ btn_rensa = tk.Button(
     )
 btn_rensa.pack(fill = tk.X)
 
-#avsluta
-
-def avsluta():
-    pass 
-
-
 btn_avsluta = tk.Button(
     text='Avsluta',
     bg = 'white',
