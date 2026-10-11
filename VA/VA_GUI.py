@@ -314,7 +314,8 @@ btn_rensa.pack(fill = tk.X)
 #avsluta
 
 def avsluta():
-    pass 
+    messagebox.showinfo('Simulation information', 'Avslutar simultionen')
+    window.destroy()
 
 
 btn_avsluta = tk.Button(
