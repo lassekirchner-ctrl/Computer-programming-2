@@ -84,6 +84,6 @@ def test_sum_prime():
 #test_sum_prime()
 
 ##A2
-print('Using recorsion, we make the problem more complicated than it' \
+#print('Using recorsion, we make the problem more complicated than it' \
 'has to be. we call is prime for n numbers, and then also call sum prime' \
 'this means that the method is n**2 overall. A regular implementation could likely be n**1')
