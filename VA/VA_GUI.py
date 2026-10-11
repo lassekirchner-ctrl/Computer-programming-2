@@ -1,6 +1,7 @@
 import tkinter as tk 
 import tkinter.messagebox as messagebox 
 import random
+from math import pi
 
 ###create error class
 class InputError(Exception):
@@ -17,7 +18,7 @@ class Ball():
         self.color = 'red'
         self.canvas_item_id = None 
 
-        self.radius = random.randint(5, 25)
+        self.radius = random.randint(5, 20)
 
         self.fart_x = random.randint(-10, 10)
         self.fart_y = random.randint(-10, 10)
@@ -92,7 +93,7 @@ class Ball():
     def eat(self, other):
         if self.radius > other.radius:
             #taking int makes radii comaprison easier! 
-            self.radius += int(other.radius / 2) ##keeps balls a little smaller
+            self.radius += int(other.radius / (2*pi)) ##keeps balls a little smaller
             other.alive = False 
             other.radius = 0 
 
@@ -130,7 +131,7 @@ lbl_antal.pack()
 
 ent_antal = tk.Entry(master = frame_controlpanel)
 ent_antal.pack(fill = tk.X)
-ent_antal.insert(0, '10')
+ent_antal.insert(0, '10') #default value for antal
 
 
 lbl_hastighet = tk.Label(master = frame_controlpanel, text = 'Hastighet:')
@@ -138,7 +139,7 @@ lbl_hastighet.pack()
 
 ent_hastighet = tk.Entry(master = frame_controlpanel)
 ent_hastighet.pack(fill = tk.X)
-ent_hastighet.insert(0, '10')
+ent_hastighet.insert(0, '100') #default value for speed
 
 def helper_read_inputs(entry):
     ### checks if inputs are valid
@@ -249,30 +250,31 @@ def reanimate():
 
 loop_id = None ###behövs för tick och starta
 def tick():
-    # 1. run the four phases, in order
-    # 2. decide: is there still something to simulate?
-    #       yes -> schedule the next tick, using the delay from parameters,
-    #              and store what after() returns in loop_id
-    #       no  -> do not reschedule; set loop_id back to None; show/print a finish message
+    #run the four steps, if len >1, schedule a new tick, else stop
     move_all()
     handle_collisions()
     remove_dead()
     reanimate()
     if len(balls) > 1:
-        loop_id = window.after(parameters['hastighet'], tick)
+        ### note! taking 1 / hastighet causes the speed to behave intuetivly
+        #i.e. higher vlaues => faster 
+        #take the int of that value to fint window.after specification
+        ## 1000 is an arbitraty factor to make the input numbers resonable
+        loop_id = window.after(int( 1000 * (1 / parameters['hastighet'])), tick)
+
         ##window.after(delay_ms, function)
     else:
         loop_id = None 
-        messagebox.showinfo('Simulation Finished!')
+        messagebox.showinfo('Simulation information', 'Simulation Finished!')
 
     
 
 def starta():
-    # guard 1: nothing to run if there are no balls (what should the user see?)
-    # guard 2: do not start a second chain if loop_id is already set
-    # otherwise: start the first tick
+    #nothing to run if len(balls) = 0
+    #dont start second sim if sim already underway
+    #otherwise: start the first tick
     if len(balls) == 0:
-        messagebox.showinfo('Error!', 'Nothing to simulate! Enter values!')
+        messagebox.showinfo('Error!', 'Nothing to simulate! Enter values and/or initiate a simulation!')
     else:
         if loop_id == None:
             tick()
