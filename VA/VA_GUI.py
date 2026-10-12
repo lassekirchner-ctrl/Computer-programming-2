@@ -20,15 +20,17 @@ class Ball():
 
         self.radius = random.randint(5, 20)
 
-        self.fart_x = random.randint(-10, 10)
-        self.fart_y = random.randint(-10, 10)
+
+        ##note: fart can be negative if we move up in the window! 
+        self.fart_x = random.randint(-10, 10) #notera fart ej samma som hastighet! 
+        self.fart_y = random.randint(-10, 10) #notera fart ej samma som hastighet! 
 
         while self.fart_x == 0 and  self.fart_y == 0: ##prevents balls from having x = 0 and y = 0 
             self.fart_x = random.randint(-10, 10)
             self.fart_y = random.randint(-10, 10)
 
-        self.x_coordinate = random.randint(0 + self.radius , size_arena_x - self.radius)
-        self.y_coordinate = random.randint(0 + self.radius, size_arena_y - self.radius)
+        self.x_coordinate = random.randint(0 + self.radius , size_arena_x - self.radius) #starting positions
+        self.y_coordinate = random.randint(0 + self.radius, size_arena_y - self.radius) #starting positions
 
 
     def move(self):
@@ -40,33 +42,33 @@ class Ball():
     def bounce_wall(self, size_arena_x, size_arena_y):
         ## right wall:
         if self.radius + self.x_coordinate >= size_arena_x:  
-            self.fart_x = - self.fart_x
-            self.x_coordinate = size_arena_x - self.radius
+            self.fart_x = - self.fart_x #invert fart
+            self.x_coordinate = size_arena_x - self.radius #prevents balls from being "outside" the arena
             #print('BOUNCE right')
 
         #left wall
         elif self.x_coordinate - self.radius <= 0 :
-            self.fart_x = - self.fart_x
-            self.x_coordinate = self.radius
+            self.fart_x = - self.fart_x #invert fart 
+            self.x_coordinate = self.radius #prevents balls from being "outside" the arena
             #print('BOUNCE left')
 
 
         ##bottom wall
         if self.radius + self.y_coordinate >= size_arena_y:
-            self.fart_y = - self.fart_y
-            self.y_coordinate = size_arena_y - self.radius
+            self.fart_y = - self.fart_y #invert fart
+            self.y_coordinate = size_arena_y - self.radius #prevents balls from being "outside" the arena
             #print('BOUNCE bottom')
         ##top wall
         elif self.y_coordinate - self.radius <= 0:
-            self.fart_y = - self.fart_y
-            self.y_coordinate = self.radius
+            self.fart_y = - self.fart_y #invert fart
+            self.y_coordinate = self.radius #prevents balls from being "outside" the arena
             #print('BOUNCE top')
 
-    def bounding_box(self):
-        x_0 = self.x_coordinate - self.radius
-        y_0 = self.y_coordinate - self.radius
-        x_1 = self.x_coordinate + self.radius
-        y_1 = self.y_coordinate + self.radius
+    def bounding_box(self): #gets coords for the bounding box of the circle 
+        x_0 = self.x_coordinate - self.radius #top left
+        y_0 = self.y_coordinate - self.radius #top left
+        x_1 = self.x_coordinate + self.radius #bottom right
+        y_1 = self.y_coordinate + self.radius #bottom right
         return x_0, y_0, x_1, y_1
 
 
@@ -76,7 +78,7 @@ class Ball():
 
         if self.alive == False or other.alive == False:
             overlap = False
-            print('dead') #test 2 
+            #print('dead') #test 2 
             return overlap
 
 
@@ -93,11 +95,11 @@ class Ball():
     def eat(self, other):
         if self.radius > other.radius:
             #taking int makes radii comaprison easier! 
-            self.radius += int(other.radius / (2*pi)) ##keeps balls a little smaller
+            self.radius += int(other.radius / (pi)) ##keeps balls a little smaller
             other.alive = False 
             other.radius = 0 
 
-        elif self.radius == other.radius:
+        elif self.radius == other.radius: #handles edge case 
             pass #no ball shoudl win! 
         
         else:
@@ -160,7 +162,7 @@ def read_inputs():
     return antal, hastighet
 
     
-## create helper function for initiera
+## create command function for btn initiera
 parameters = {} #antal, hastighet
 def initiera():
     try:
@@ -219,7 +221,7 @@ def handle_collisions_old():
             tail += 1
             head += 1
 
-def handle_collisions():
+def handle_collisions(): #takes care of eating 
     for outer in range(0, len(balls)):
         ball_outer = balls[outer]
         for inner in range (outer, len(balls)): 
@@ -235,7 +237,7 @@ def remove_dead():
     balls.clear() #clear og balls 
     for ball in balls_copy:
         if ball.alive == False:
-            canvas_arena.delete(ball.canvas_item_id)
+            canvas_arena.delete(ball.canvas_item_id) #remove from arena 
         else:
             balls.append(ball) ##add survivors to cleared balls 
     
@@ -244,7 +246,7 @@ def reanimate():
     for ball in balls:
         canvas_arena.coords(ball.canvas_item_id, *ball.bounding_box())
         canvas_arena.itemconfigure(ball.canvas_item_id, fill = ball.color)
-    ##ful jävla funktion, är egentligen:
+    ##ful jävla funktion, är i stort sätt:
     #canvas.coord(cikel, *bounding box), alltså uppdateras bara koordinaterna av cirkel
   
 
@@ -261,8 +263,7 @@ def tick():
         #take the int of that value to fint window.after specification
         ## 1000 is an arbitraty factor to make the input numbers resonable
         loop_id = window.after(int( 1000 * (1 / parameters['hastighet'])), tick)
-
-        ##window.after(delay_ms, function)
+        #function has the form: window.after(delay_ms, function)
     else:
         loop_id = None 
         messagebox.showinfo('Simulation information', 'Simulation Finished!')
@@ -283,7 +284,6 @@ def starta():
 
 
 
-
 btn_starta = tk.Button(
     text='Starta',
     bg = 'white',
@@ -293,9 +293,7 @@ btn_starta = tk.Button(
     )
 btn_starta.pack(fill = tk.X)
 
-
 ## rensa
-
 def rensa():
     balls.clear()
     canvas_arena.delete('all')
