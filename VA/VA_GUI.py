@@ -1,3 +1,10 @@
+'''
+Student: Lars Kirchner
+Mail: lasse.kirchner@gmail.com
+TA:
+Date: 12/10/2026
+'''
+
 import tkinter as tk 
 import tkinter.messagebox as messagebox 
 import random
@@ -9,7 +16,6 @@ class InputError(Exception):
 
 
 ## create class ball
-
 class Ball():
 
     def __init__(self):
