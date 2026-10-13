@@ -375,5 +375,7 @@ def test_overlaps():
 
 #test_overlaps()
 
+def test():
+    pass 
 
 window.mainloop() #runs an unbroken loop for tinker, i.e. no new prompt appears in terminal

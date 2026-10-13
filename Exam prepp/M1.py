@@ -58,6 +58,56 @@ def test_div_9():
     for x in [9, 18, 9000, 25689, 24606]:
         print(divisible9(x))
 
+
+##B1 tower of hanoi
+class TowerHanoi:
+    def bricklek(self):
+        def _bricklek(k, start = 0, goal = 1, help = 1):
+            if k == 0:
+                return []
+            else:
+                return _bricklek(k-1, start, help, goal) + \
+                [(start, goal)] + _bricklek(k-1, help, goal, start)
+
+        return _bricklek(self.n)
+
+    def __init__ (self, n):
+        self.n = n
+        self.ListOfList = [list(range(n)), [], []]
+        self._time = 0
+        self.instructions = self.bricklek()
+
+    def __str__(self):
+        stacks = ['Start', 'Help', 'Goal']
+        repr = 'step' + str(self._time) + '\n'
+        for s, l in zip(stacks, self.ListOfList):
+            repr += s + ':' + '+' +'\n'
+            for n in l:
+                repr += '*' *(n+1) + '\n'
+        return repr 
+
+    def step(self):
+        curr = self.instructions[self._time]
+        out = curr[0]
+        _in = curr[1]
+        element = self.ListOfList[out][0]
+        self.ListOfList[out] = self.ListOfList[out][1:]
+        self.ListOfList[_in].insert(0, element)
+        self._time = self._time + 1 
+
+
+
+def test_hanoi():
+    TH = TowerHanoi (3)
+    for _ in range (5):
+        TH . step ()
+        print ( TH )
+
+test_hanoi()
+
+
+##re-exam VT 2025
+
 #test_div_9()
 def sum_prime(x): ##Exercise A1
     def is_prime(n):##given funktion
@@ -86,4 +136,4 @@ def test_sum_prime():
 ##A2
 #print('Using recorsion, we make the problem more complicated than it' \
 'has to be. we call is prime for n numbers, and then also call sum prime' \
-'this means that the method is n**2 overall. A regular implementation could likely be n**1')
+'this means that the method is n**2 overall. A regular implementation could likely be n**1'

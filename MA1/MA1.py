@@ -125,13 +125,13 @@ def count(x, s: list) -> int:
 """Exc7: Returns a list of string instructions for how to move the tiles"""
 ##also called tower of hanoi
 ##cant seem to get down to five lines without removing the if n == 0 
-def bricklek(f: str, t: str, h: str, n: int) -> list[str]:
+def hanoi(start, help, goal, n):
     ans = []
     if n == 0:
         return ans
-    ans.extend(bricklek(f, h, t, n-1))  ## get step 1 into ans
-    ans.append(f'{f}->{t}')  #step 2, move largest
-    ans.extend(bricklek(h, t, f, n-1)) # move all except largest onto largest, #change which pegs are goal, helper, etc. 
+    ans.extend(hanoi(start, help, goal, n-1))  ## get step 1 into ans
+    ans.append(f'{start}->{help}')  #step 2, move largest
+    ans.extend(hanoi (goal, help, start, n-1)) # move all except largest onto largest, #change which pegs are goal, helper, etc. 
     return ans
 
 def own_test_bricklek():
