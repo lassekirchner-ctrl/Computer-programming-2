@@ -152,7 +152,7 @@ def test_middle():
             ll.insert ( x )
         print ( ll . middle () , lst [( len ( lst ))//2])
 
-test_middle()
+#test_middle()
 
 def Merge(ll1,ll2): ##Exercise B2
     x1 = ll1.first
@@ -310,3 +310,85 @@ def test_pop():
        print ( stack )
 
 #test_pop()
+
+##B2
+class LinkedList:
+
+    class Node:
+        def __init__(self, data, succ=None):
+            self.data = data
+            self.succ = succ
+
+    def __init__(self):
+        self.first = None
+
+    def __iter__(self):
+        current = self.first
+        while current:
+            yield current.data
+            current = current.succ
+
+    def __str__(self):
+        return '(' + ', '.join([str(x) for x in self]) + ')'
+
+    def insert(self, x):
+        if self.first is None or x <= self.first.data:
+            self.first = LinkedList.Node(x, self.first)
+        else:
+            f = self.first
+            while f.succ and x > f.succ.data:
+                f = f.succ
+            f.succ = LinkedList.Node(x, f.succ)
+
+    def middle(self): ##Exercise B2
+        lead = trail = self.first 
+        if lead is None:
+            return None
+        while lead is not None and lead.succ is not None:
+            lead = lead.succ.succ 
+            trail = trail.succ
+        return trail.data 
+
+
+
+
+
+def test_middle():
+    X = [[0] , [1 ,2] ,[1 ,2 ,3] ,[1 ,2 ,3 ,5] ,[1 ,2 ,3 ,5 ,8] , list ( range (100))]
+    for lst in X :
+        ll = LinkedList ()
+    for x in lst :
+        ll . insert ( x )
+    print ( ll . middle () , lst [( len ( lst ))//2])
+
+#test_middle()
+
+##B3
+class Fib: #Exercise B3. Write Class Lucas below Class Fib.
+    def __init__(self):
+        self.a = 1
+        self.b = 1
+    def __str__(self):
+        return ("I represent an infinite sequence!")
+
+    def next(self):
+        print(str(self.a), end=" ")
+        self.a, self.b =  self.b, self.a + self.b 
+        ##neds to be a tuple assignment
+class Lucas(Fib):
+    def __init__(self):
+        self.a = 2
+        self.b = 1
+
+def test_lucas():
+    F = Fib ()
+    for _ in range (15):
+        F.next()
+    print ( " " )
+    L = Lucas ()
+    for _ in range (15):
+        L.next()
+    print ( " " )
+    print ( L )
+
+test_lucas()

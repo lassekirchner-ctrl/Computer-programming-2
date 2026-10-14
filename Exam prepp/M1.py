@@ -103,7 +103,27 @@ def test_hanoi():
         TH . step ()
         print ( TH )
 
-test_hanoi()
+#test_hanoi()
+
+
+##B1
+def base11(x):
+    def inner(x):
+        if x < 10:
+            return str(x)
+        else:
+            return 'A'
+    if x < 0:
+        return '-' + base11(-x)
+    elif x < 11:
+        return inner(x)
+    else:
+        return base11(x // 11) + inner((x % 11))
+
+def test_base11():
+    for x in [9 , 44 , 120 , 1000 ,1111]:   
+        print ( base11 ( x ) , end = " " )
+test_base11()
 
 
 ##re-exam VT 2025

@@ -73,7 +73,6 @@ if __name__ == '__main__':
 
 
 import math 
-
 def is_prime(n):
     """ Returns true if n is prime
     """
@@ -134,6 +133,6 @@ def main():
     print(Estimation(arr))
 if __name__ == '__main__':
     main()
-    
+
 
 
