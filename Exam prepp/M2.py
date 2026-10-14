@@ -98,6 +98,117 @@ def test_max():
 
 #test_max()
 
+##B2 and B3
+class LinkedList:
+
+    class Node:
+        def __init__(self, data, succ=None):
+            self.data = data
+            self.succ = succ
+
+    def __init__(self):
+        self.first = None
+
+    def __iter__(self):
+        current = self.first
+        while current:
+            yield current.data
+            current = current.succ
+
+    def __str__(self):
+        return '(' + ', '.join([str(x) for x in self]) + ')'
+
+    def insert(self, x):
+        if self.first is None or x <= self.first.data:
+            self.first = LinkedList.Node(x, self.first)
+        else:
+            f = self.first
+            while f.succ and x > f.succ.data:
+                f = f.succ
+            f.succ = LinkedList.Node(x, f.succ)
+
+    def copy(self): #can be used in Exercise B2
+        result = LinkedList()
+        for i in self:
+            result.insert(i)
+        return result
+    
+    def middle(self): ##Exercise B3
+        lead = trail = self.first 
+        if lead is None:
+            return None
+        else:
+            while lead is not None and lead.succ is not None:
+                lead = lead.succ.succ
+                trail = trail.succ
+        return trail.data
+    #complexity should be n since it the lenght doublees, we need to visit twice as many nodes. 
+
+def test_middle():
+    X = [[0] , [1 ,2] ,[1 ,2 ,3] ,[1 ,2 ,3 ,5] ,[1 ,2 ,3 ,5 ,8] , list ( range (100))]
+    for lst in X :
+        ll = LinkedList ()
+        for x in lst :
+            ll.insert ( x )
+        print ( ll . middle () , lst [( len ( lst ))//2])
+
+test_middle()
+
+def Merge(ll1,ll2): ##Exercise B2
+    x1 = ll1.first
+    x2 = ll2.first
+
+    if x1 is None:
+        result = ll2.copy() 
+        return result
+    elif x2 is None:
+        result = ll1.copy()
+        return result
+    else:
+        result = LinkedList()
+        if x1.data < x2.data:
+            result.first = LinkedList.Node(x1.data)
+            x1 = x1.succ
+        else:
+            result.first = LinkedList.Node(x2.data)
+            x2 = x2.succ 
+        r = result.first
+
+        while x1 is not None and x2 is not None:
+            if x1.data < x2.data:
+                r.succ = LinkedList.Node(x1.data)
+                x1 = x1.succ
+            else:
+                r.succ = LinkedList.Node(x2.data)
+                x2 = x2.succ 
+            r = r.succ 
+
+        while x1 is not None:
+            r.succ = LinkedList.Node(x1.data)
+            x1 = x1.succ
+            r = r.succ
+
+        while x2 is not None:
+            r.succ = LinkedList.Node(x2.data)
+            x2 = x2.succ
+            r = r.succ
+
+        return result
+
+def test_merge():
+    X = [[1 ,3 ,6 ,7] , [] , []]
+    Y = [[0 ,2 ,8 ,9] , [1 ,2 ,3] , []]
+    for lst1 , lst2 in zip (X , Y ):
+        ll1 , ll2 = LinkedList () , LinkedList ()
+        for x in lst1 :
+            ll1 . insert ( x )
+        for x in lst2 :
+            ll2 . insert ( x )
+        ll3 = Merge ( ll1 , ll2 )
+        print ( ll3 )
+
+#test_merge()
+
 
 
 ## re-exam VT25
@@ -198,4 +309,4 @@ def test_pop():
        stack . Pop ()
        print ( stack )
 
-test_pop()
+#test_pop()
