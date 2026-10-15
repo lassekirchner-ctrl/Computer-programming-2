@@ -132,7 +132,34 @@ def main():
     arr = generate_normal(n)
     print(Estimation(arr))
 if __name__ == '__main__':
-    main()
+    #main()
+    pass
 
 
+##B4
+import concurrent.futures as future
+import numpy as np 
 
+def is_even_rounded(sub_frac):
+    return np.sum(np.round(sub_frac) % 2 == 0)
+
+def prob_even(n):
+    n_p = 10 
+    x = np.random.uniform(0, 1, n)
+    y = np.random.uniform(0, 1, n)
+    frac = x/y
+    chunck_size = int(n / n_p)
+    chunks = []
+    for i in range (n_p):
+        start = i * chunck_size
+        end = (i+1) * chunck_size 
+        chunks.append(frac[start:end])
+
+    with future.ProcessPoolExecutor(max_workers=n_p) as executor:
+           results = list(executor.map(is_even_rounded, chunks))
+    total_events = sum(results)
+    return total_events / n
+
+
+if __name__ == "__main__":
+    print(prob_even(10**8))

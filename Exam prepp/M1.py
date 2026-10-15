@@ -123,7 +123,7 @@ def base11(x):
 def test_base11():
     for x in [9 , 44 , 120 , 1000 ,1111]:   
         print ( base11 ( x ) , end = " " )
-test_base11()
+#test_base11()
 
 
 ##re-exam VT 2025
@@ -157,3 +157,79 @@ def test_sum_prime():
 #print('Using recorsion, we make the problem more complicated than it' \
 'has to be. we call is prime for n numbers, and then also call sum prime' \
 'this means that the method is n**2 overall. A regular implementation could likely be n**1'
+
+
+#exam 2024 HT
+
+def A1(n): 
+    """ A1: complete the function """
+    memory = {}
+    def A1_inner(n):
+
+        if n not in memory:
+            if n < 4:
+                memory [n] = 1
+                return 1
+            else:
+                memory [n] = 2*A1_inner(n-1) - 4*A1_inner(n-2) + 3*A1_inner(n-3) -A1_inner(n-4)
+                return memory [n]
+        else:
+            return memory[n]
+    return A1_inner(n)
+
+    
+def A2_old(input_string): ##works! but dosent recurse
+    while input_string[0] == input_string[-1]:
+        if len(input_string) == 1 or len(input_string) == 2:
+            return True 
+        input_string = input_string[1: (len(input_string)-1)]
+    return False 
+
+def A2(input_string):  
+    if len(input_string) == 0:
+        return False #we need a word to check of palindrom
+    if input_string[0] == input_string[-1]:
+        if len(input_string) == 1 or len(input_string) == 2:
+            return True 
+        return A2(input_string[1: (len(input_string)-1)])
+    return False 
+
+def test_A2():
+    print(A2('madam'))
+    print(A2('knas'))
+    print(A2('racecar'))
+    print(A2('mmmmmmmbmmmmmmmmmmmmmmmmmmmmmmmmmmm'))
+    print(A2('dammad'))
+
+#test_A2()
+
+def B1(lst):
+    lst_even = []
+    lst_odd = []
+
+    def B1_inner(lst):
+        if len(lst) == 0:
+            return lst_even, lst_odd
+        if len(lst) == 1:
+            lst_even.append(lst[0])
+            return lst_even, lst_odd
+        else: # len(lst) >= 2
+            lst_even.append(lst[0])
+            lst_odd.append(lst[1])
+            return B1_inner(lst[2:])
+    B1_inner(lst)
+    return lst_even, lst_odd
+
+
+def test_B1():
+    lists = ([],
+             [0],
+             [0, 1],
+             [0, 1, 2],
+             [0, 1, 2, 3],
+             [0, 1, 2, 3, 4]
+             )
+    for lst in lists:
+       print(f'{str(lst):15s} \t {B1(lst)}')
+
+test_B1()

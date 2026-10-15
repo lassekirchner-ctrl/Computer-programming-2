@@ -391,4 +391,4 @@ def test_lucas():
     print ( " " )
     print ( L )
 
-test_lucas()
+#test_lucas()
