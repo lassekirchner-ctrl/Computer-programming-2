@@ -162,4 +162,132 @@ def prob_even(n):
 
 
 if __name__ == "__main__":
-    print(prob_even(10**8))
+    pass
+    #print(prob_even(10**8))
+
+#tenta 2024 HT 
+##A4
+
+
+
+class LinkedList:
+
+    class Node:
+        def __init__(self, data, succ=None):
+            self.data = data
+            self.succ = succ
+
+    def __init__(self):
+        self.first = None
+
+    def __iter__(self):
+        current = self.first
+        while current:
+            yield current.data
+            current = current.succ
+
+    def __str__(self):
+        return '(' + ', '.join([str(x) for x in self]) + ')'
+
+    def append(self, x):
+        if self.first is None:
+            self.first = LinkedList.Node(x, None )
+            return 1
+        lenght = 2 #only gets triggered when if dosent, means we have at least len = 2
+        current = self.first 
+        while current.succ is not None:
+            lenght += 1
+            current = current.succ 
+        current.succ = LinkedList.Node(x, None)
+        return lenght
+       
+        
+def test_append():
+    lst = LinkedList ()
+    print ( lst )
+    for i in [5 ,2 ,10 ,5]:
+        l = lst . append ( i )
+        print ( lst , l )
+
+#test_append()
+
+class BST:
+    class Node:
+        def __init__(self, key, left=None, right=None):
+            self.key = key
+            self.left = left
+            self.right = right
+            self.count = 1  # For use in task B2
+
+        def __str__(self):
+            return f'({self.key}, {self.count})'
+
+        def __iter__(self):
+            if self.left:
+                yield from self.left
+            yield self
+            if self.right:
+                yield from self.right
+
+    def __init__(self, init=None):
+        self.root = None
+        if init:
+            for x in init:
+                self.insert(x)
+
+    def __iter__(self):
+        if self.root:
+            yield from self.root
+
+    def __str__(self):
+        return '<' + ', '.join([str(x.key) for x in self]) + '>'
+
+    def __repr__(self):
+        return '<' + ', '.join([str(x) for x in self]) + '>'
+
+    def insert(self, key):
+        """ Standard binary search tree insertion, not a part of B2
+        """
+        def insert(key, r):
+            if r is None:
+                return BST.Node(key)
+            elif key < r.key:
+                r.left = insert(key, r.left)
+            elif key > r.key:
+                r.right = insert(key, r.right)
+            else:
+                pass # Already there. Do nothing.
+            return r
+
+        self.root = insert(key, self.root)
+
+    def sum_level(self, level):
+        """ A5: Returns the sum of the key values of the node on level """
+
+        def _sum(r, lvl):
+            if r is None:
+                return 0
+            if lvl == 0:
+                return r.key 
+            return _sum(r.left, lvl -1) + _sum(r.right, lvl-1)
+        
+        return _sum(self.root, level)
+
+    #def _insert(self, key):
+     #   """help function for B2"""
+     #   pass
+
+    #def insert(self, key):
+    #    """B2: An insert method that maintain the count field in the nodes"""
+
+
+def test_sum_level():
+    inserts = (5 , 8 , 1 , 3 , 7 , 2 , 6 , 9)
+    print(f' Inserted keys : { inserts } ')
+    tree = BST ( inserts )
+    print ( ' Level Sum of keys ')
+    for level in (0 , 1 , 2 , 3 , 4):
+        result = tree . sum_level ( level )
+        print (f'{ level :3d} { result :10d} ')
+
+test_sum_level()

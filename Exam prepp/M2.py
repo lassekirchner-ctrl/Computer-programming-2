@@ -392,3 +392,10 @@ def test_lucas():
     print ( L )
 
 #test_lucas()
+
+
+#exam 2024 HT
+
+##A3 calculator question
+
+

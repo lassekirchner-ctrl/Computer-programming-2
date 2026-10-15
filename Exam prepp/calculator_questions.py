@@ -1,3 +1,8 @@
+'''
+Module 2: A3
+Exam on 2024-10-29
+'''
+
 from tokenize import TokenError
 import math
 import io
@@ -50,56 +55,32 @@ class TokenizeWrapper:
 
     def is_at_end(self):
         return self.current[0] == 0 or self.current[0] == 4 or \
-            self.current[1][0] == '#'  # self.current[0] == 55
+            self.current[1][0] == '#'
+        # self.current[0] == 55   # This test doesn't work everywhere
+        # try to check on '#' instead
 
     def has_next(self):
         return self.current[0] != 0 and self.current[0] != 4
 
+def logn(args):
+    x = args[0]
 
-def log(x):
-    if x <= 0:
-        raise EvaluationError(f'Illegal argument to log: {x}')
-    return math.log(x)
+    base = args[1] if len(args) > 1 else math.e
 
-
-def fib(n, memory):
-    if n<0 or n//1!=n:
-        raise EvaluationError(f'Illegal argument to fib: {n}')
-    if n not in memory:
-        memory[n] = fib(n - 1, memory) + fib(n - 2, memory)
-    return memory[n]
-
-
-def guess_age():
-    upper_bound = 100
-    lower_bound = 1
-    x = 51 ## starting value
-    while upper_bound != lower_bound:
-        if input(f'Is your age less than: {x}?') == 'yes':
-            upper_bound = x
-            x -= int((upper_bound - lower_bound)/2)
-        elif input(f'Is your age less than: {x}?') == 'no':
-            lower_bound = x
-            x += int((upper_bound - lower_bound)/2)
-        else:
-            raise SyntaxError ("Expected answer 'yes' or 'no'.")
-    return x
-
-guess_age()
-
-
-FUNCTIONS_0 = {'age()' : guess_age}
+    if not base > 1:
+        raise EvaluationError(f"Illegal base to log: {base}, must be > 0. ") 
+    else:
+        return math.log(x, base)
 
 
 FUNCTIONS_1 = {  # Functions with a single argument
     'sin': math.sin,
     'cos': math.cos,
     'exp': math.exp,
-    'log': log,
-    'fib': fib
 }
 
 FUNCTIONS_N = {  # Functions with several arguments
+    'log' : logn,
     'sum': sum,
     'max': max
 }
@@ -190,24 +171,12 @@ def parse(wtok, c, aux=''):  # Just for convenience
         raise SyntaxError(f"Expected '{c}'" + aux)
     wtok.next()
 
+
 def factor(wtok, variables):
     if wtok.get_current() == '(':
         wtok.next()
         result = assignment(wtok, variables)
         parse(wtok, ')', '')
-
-    elif wtok.get_current() in FUNCTIONS_0:
-        ##can only be age()
-        wtok.next()
-        if wtok.get_current() == '(':
-            wtok.next()
-            if wtok.get_current() == ')':
-                result = guess_age
-            else:
-                raise SyntaxError (f"Error occured at {wtok.get_current()} just after {wtok.get_previous()}")
-        else:
-            raise SyntaxError (f"Error occured at {wtok.get_current()} just after {wtok.get_previous()}")
-
 
     elif wtok.get_current() in FUNCTIONS_1:
         func = FUNCTIONS_1[wtok.get_current()]
@@ -248,16 +217,18 @@ def vars_print(variables):
     for name, value in sorted(variables.items()):
         print(f"   {name:<5} : {value}")
 
-def memory_print(memory):
-    for name, value in sorted(memory.items()):
-        print(f"   {name:<5} : {value}")
-
 
 def main():
+    """
+    Handles:
+       the iteration over input lines,
+       the commands 'quit' and 'vars' and
+       catches raised exceptions.
+    Starts with reading the init file
+    """
 
     print("Numerical calculator")
     variables = {"ans": 0.0}
-    memory = {0: 0, 1 :1}
 
     while True:
         line = input('\nInput: ')
@@ -266,8 +237,6 @@ def main():
         wtok = TokenizeWrapper(line)
         if wtok.get_current() == 'vars':
             vars_print(variables)
-        if wtok.get_current() == 'mem':
-            memory_print(memory)
         elif wtok.get_current() == 'quit':
             print('Bye')
             exit()
@@ -290,5 +259,5 @@ def main():
 
 
 if __name__ == "__main__":
-    #main()
-    pass
+    #pass 
+    main()
