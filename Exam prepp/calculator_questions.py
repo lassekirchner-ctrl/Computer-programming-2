@@ -73,6 +73,24 @@ def logn(args):
         return math.log(x, base)
 
 
+def divisible(args):
+    if len(args) <= 1:
+        raise SyntaxError ("Expected exactly two arguments to divisible!")
+    elif len(args) > 2:
+        raise SyntaxError ("Expected two arguments to divisible, not more!")
+    A, B = args[0], args [1]
+    if A <= 0:
+        raise EvaluationError (f"Illegal argument to divisible: {A}")
+    elif B <= 0:
+        raise EvaluationError (f"Illegal argument to divisible: {B}")
+    else:
+        if (A % B) == 0:
+            return A
+        else:
+            return B     
+
+
+
 FUNCTIONS_1 = {  # Functions with a single argument
     'sin': math.sin,
     'cos': math.cos,
@@ -82,7 +100,8 @@ FUNCTIONS_1 = {  # Functions with a single argument
 FUNCTIONS_N = {  # Functions with several arguments
     'log' : logn,
     'sum': sum,
-    'max': max
+    'max': max,
+    'divisible' : divisible
 }
 
 def arglist(wtok, variables):
@@ -237,6 +256,8 @@ def main():
         wtok = TokenizeWrapper(line)
         if wtok.get_current() == 'vars':
             vars_print(variables)
+        elif wtok.get_current() == 'clear':
+            variables.clear() #Exc A4
         elif wtok.get_current() == 'quit':
             print('Bye')
             exit()

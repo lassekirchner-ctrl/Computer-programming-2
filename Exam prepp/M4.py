@@ -279,5 +279,68 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    pass
+    #main()
 
+
+#exam 2024 HT 
+
+##A6
+def A6(n:list):
+    return list(filter(lambda x: x % 2 == 0, n))
+
+def test_lst():
+    numbers = [1 , 3 , 5]
+    print (f" Even numbers : { A6 ( numbers )} " )
+    numbers = [1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 99]
+    print (f" Even numbers : { A6 ( numbers )} " )
+
+#test_lst()
+
+##A7
+def A7(n):
+    n_lst = [x for x in range(n +1)] #list comp, py index starts at 0 
+    return sum(list(map(lambda x: x**2, n_lst))) #map, lambda, sum
+   
+
+
+#print(A7(4))
+    
+
+##B3
+def random_matrices(m,n,k):
+    A = []
+    for _ in range(m):
+         res = [random.randrange(0, 10, 1) for _ in range(n)]
+         A = A+[res]
+    B = []
+    for _ in range(n):
+        res = [random.randrange(0, 10, 1) for _ in range(k)]
+        B = B + [res]
+    return A,B
+
+import concurrent.futures as future
+import numpy as np
+
+    
+#     return A * B
+
+def multiplication(A,B):
+    """B3: matrix multiplication"""
+    num_rows_A, num_columns_A = np.shape(A)
+    num_rows_B, num_columns_B = np.shape(B)
+    n_p = min(num_columns_A, num_rows_B) # should both be n
+    
+    for col in num_columns_B:
+        
+
+
+
+def tets_multiplication():
+    A , B = random_matrices (4 ,3 ,2)
+    C = multiplication (A, B)
+    print ( A )
+    print ( B )
+    print ( C )
+
+tets_multiplication()

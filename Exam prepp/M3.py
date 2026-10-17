@@ -273,14 +273,35 @@ class BST:
         
         return _sum(self.root, level)
 
-    #def _insert(self, key):
-     #   """help function for B2"""
-     #   pass
+    def B2_insert(self, key):
+        def _insert(key, r):
+            if r is None:
+                return BST.Node(key)
+            elif key < r.key:
+                r.left = _insert(key, r.left)
+            elif key > r.key:
+                r.right = _insert(key, r.right)
+            else:
+                return r 
 
-    #def insert(self, key):
-    #    """B2: An insert method that maintain the count field in the nodes"""
+            r.count = 1 + (r.left.count if r.left is not None else 0) + (r.right.count if r.right else 0)
+            return r 
+
+        self.root = _insert(key, self.root)
 
 
+def test_B2insert():
+    inserts = (10 , 5 , 1 , 7 , 20 , 30 , 15 , 17 , 12 , 2)
+    print (f'Inserted keys : { inserts } ')
+    tree = BST ()
+    for x in inserts :
+        tree . B2_insert( x )
+        print (f' After inserting { x }: { repr ( tree )} ')
+
+test_B2insert()
+
+
+##A5
 def test_sum_level():
     inserts = (5 , 8 , 1 , 3 , 7 , 2 , 6 , 9)
     print(f' Inserted keys : { inserts } ')
@@ -290,4 +311,4 @@ def test_sum_level():
         result = tree . sum_level ( level )
         print (f'{ level :3d} { result :10d} ')
 
-test_sum_level()
+#test_sum_level()
