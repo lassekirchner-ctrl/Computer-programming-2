@@ -127,19 +127,18 @@ def count(x, s: list) -> int:
 ##cant seem to get down to five lines without removing the if n == 0 
 def hanoi(start, help, goal, n):
     ans = []
-    if n == 0:
-        return ans
+    if n == 0: return ans
     ans.extend(hanoi(start, help, goal, n-1))  ## get step 1 into ans
     ans.append(f'{start}->{help}')  #step 2, move largest
     ans.extend(hanoi (goal, help, start, n-1)) # move all except largest onto largest, #change which pegs are goal, helper, etc. 
     return ans
 
 def own_test_bricklek():
-    print(bricklek('f', 't', 'h', 1)) #tests base-case
-    print(bricklek('f', 't', 'h', 2))
-    print(bricklek('f', 't', 'h', 4))
+    print(hanoi('f', 't', 'h', 1)) #tests base-case
+    print(hanoi('f', 't', 'h', 2))
+    print(hanoi('f', 't', 'h', 4))
 
-#own_test_bricklek()
+own_test_bricklek()
 
 
 """For Exc9: Returns the n:th Fibonacci number"""
@@ -291,8 +290,8 @@ def main():
 
     print('\nBye!')
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 ####################################################
 

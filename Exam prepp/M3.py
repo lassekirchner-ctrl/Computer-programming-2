@@ -298,7 +298,7 @@ def test_B2insert():
         tree . B2_insert( x )
         print (f' After inserting { x }: { repr ( tree )} ')
 
-test_B2insert()
+#test_B2insert()
 
 
 ##A5
@@ -312,3 +312,54 @@ def test_sum_level():
         print (f'{ level :3d} { result :10d} ')
 
 #test_sum_level()
+
+##A5
+
+
+def A5(zip_exam):
+    result = (filter(lambda name_grade: name_grade[1] == 5, zip_exam))
+    return list(map(lambda name_grade:name_grade[0], result))
+
+def test_A5_new():
+    names = [ " Anna " , " Anton " , " Jakob " , " Ludwig " , " Nils " , " Oliver " , " Rafael " , " Tim " ]
+    grades = [3 ,4 ,5 ,5 ,4 ,3 ,5 ,5]
+    print ( A5 ( zip ( names , grades )))
+
+#test_A5_new()
+
+
+##A6
+import concurrent.futures as futures
+import numpy as np
+def generate_list(n):
+    a = np.random.randint(0,9)
+    b = np.random.randint(10, 19)
+    return np.random.uniform(a,b,n)
+
+def Estimation(lst): ##Exercise A6
+    n_p = 10
+    n = len(lst)
+    reshaped = lst.reshape(n_p, -1)
+    with futures.ProcessPoolExecutor() as ex:
+        _min = min(list(ex.map(min, reshaped)))
+        _max = max(list(ex.map(max, reshaped)))
+    a = float((n/(n-1))*_min - ((1/(n-1)*_max)))
+    b = float((n/(n-1))*_max - ((1/(n-1))*_min))
+    return a, b
+
+def main():
+
+    print("Test A5:")
+    names = ["Anna", "Anton", "Jakob",
+    "Ludwig", "Nils", "Oliver",
+    "Rafael", "Tim"]
+    grades = [3,4,5,5,4,3,5,5]
+    #for l, f in zip(names, grades):
+       # print(f'{l} receives {f}')
+    print(A5(zip(names, grades)))
+    print("Test A6:")
+    n = 10**6
+    lst = generate_list(n)
+    print(Estimation(lst))
+if __name__ == '__main__':
+    main()

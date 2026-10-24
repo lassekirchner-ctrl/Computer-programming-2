@@ -1,8 +1,3 @@
-'''
-Module 2: A3
-Exam on 2024-10-29
-'''
-
 from tokenize import TokenError
 import math
 import io
@@ -55,53 +50,66 @@ class TokenizeWrapper:
 
     def is_at_end(self):
         return self.current[0] == 0 or self.current[0] == 4 or \
-            self.current[1][0] == '#'
-        # self.current[0] == 55   # This test doesn't work everywhere
-        # try to check on '#' instead
+            self.current[1][0] == '#'  # self.current[0] == 55
 
     def has_next(self):
         return self.current[0] != 0 and self.current[0] != 4
 
-def logn(args):
-    x = args[0]
 
-    base = args[1] if len(args) > 1 else math.e
+def log(x):
+    if x <= 0:
+        raise EvaluationError(f'Illegal argument to log: {x}')
+    return math.log(x)
 
-    if not base > 1:
-        raise EvaluationError(f"Illegal base to log: {base}, must be > 0. ") 
+def fib(n, mem):
+    if n<0 or n//1!=n:
+        raise EvaluationError(f'Illegal argument to fib: {n}')
+    if n not in mem:
+        mem[n] = fib(n - 1, mem) + fib(n - 2, mem)
+    return mem[n]
+
+def sqrt(n):
+    if n < 0:
+        raise EvaluationError (f"Illegal argument to sqrt: {n}")
     else:
-        return math.log(x, base)
+        return math.sqrt(n)
 
+def age():
+    n = 51
+    lower = 1
+    upper = 100
 
-def divisible(args):
-    if len(args) <= 1:
-        raise SyntaxError ("Expected exactly two arguments to divisible!")
-    elif len(args) > 2:
-        raise SyntaxError ("Expected two arguments to divisible, not more!")
-    A, B = args[0], args [1]
-    if A <= 0:
-        raise EvaluationError (f"Illegal argument to divisible: {A}")
-    elif B <= 0:
-        raise EvaluationError (f"Illegal argument to divisible: {B}")
-    else:
-        if (A % B) == 0:
-            return A
+    while upper - lower != 1:
+        inpt = input(f'Is your age less than {n}?')
+        if inpt == 'yes':
+            upper = n
+            n -= (upper - lower) // 2
+        elif inpt == 'no':
+            lower = n
+            n += (upper - lower) // 2
         else:
-            return B     
+            raise SyntaxError ("Expected yes or no as an answer!")
 
+    return lower
+
+
+FUNCTIONS_0 = {
+    'age' : age
+}
 
 
 FUNCTIONS_1 = {  # Functions with a single argument
     'sin': math.sin,
     'cos': math.cos,
     'exp': math.exp,
+    'sqrt' : sqrt,
+    'log': log,
+    'fib': fib
 }
 
 FUNCTIONS_N = {  # Functions with several arguments
-    'log' : logn,
     'sum': sum,
-    'max': max,
-    'divisible' : divisible
+    'max': max
 }
 
 def arglist(wtok, variables):
@@ -197,6 +205,17 @@ def factor(wtok, variables):
         result = assignment(wtok, variables)
         parse(wtok, ')', '')
 
+    elif wtok.get_current() in FUNCTIONS_0:
+        wtok.next()
+        if wtok.get_current() == '(':
+            wtok.next()
+            if wtok.get_current() == ')':
+                wtok.next()
+                result = age() 
+        else:
+            raise SyntaxError (f"Unbalanced paranthesis at: {wtok.get_current()}")
+                
+
     elif wtok.get_current() in FUNCTIONS_1:
         func = FUNCTIONS_1[wtok.get_current()]
         wtok.next()
@@ -236,18 +255,18 @@ def vars_print(variables):
     for name, value in sorted(variables.items()):
         print(f"   {name:<5} : {value}")
 
+def memory_print(memory):
+    for name, value in sorted(memory.items()):
+        print(f"   {name:<5} : {value}")
+
 
 def main():
-    """
-    Handles:
-       the iteration over input lines,
-       the commands 'quit' and 'vars' and
-       catches raised exceptions.
-    Starts with reading the init file
-    """
 
     print("Numerical calculator")
     variables = {"ans": 0.0}
+    memory = {0: 0, 1 :1}
+
+    FUNCTIONS_1['fib'] = lambda n: fib(n, memory)
 
     while True:
         line = input('\nInput: ')
@@ -256,8 +275,8 @@ def main():
         wtok = TokenizeWrapper(line)
         if wtok.get_current() == 'vars':
             vars_print(variables)
-        elif wtok.get_current() == 'clear':
-            variables.clear() #Exc A4
+        if wtok.get_current() == 'mem':
+            memory_print(memory)
         elif wtok.get_current() == 'quit':
             print('Bye')
             exit()

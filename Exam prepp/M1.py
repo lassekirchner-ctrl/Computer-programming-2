@@ -232,4 +232,104 @@ def test_B1():
     for lst in lists:
        print(f'{str(lst):15s} \t {B1(lst)}')
 
-test_B1()
+#test_B1()
+
+
+
+def base_3(x):  
+    if x < 0:
+        return '-' + base_3(-x)
+    elif x == 0:
+        return '0'
+    elif x == 1:
+        return '1'
+    elif x == 2:
+        return '2'
+    else:
+        return base_3(x//3) + str(x%3) 
+
+def test_base_3new():    
+    for x in [3 ,6 ,20 ,27 ,28 ,52]:
+        print ( base_3 ( x ) , end = " " )
+
+#test_base_3new()
+def digit_sum(x):
+    """ Computes and returns the sum of the digits
+    """
+    if x < 10:
+        return x
+    else:
+        result  = 0
+        y = str(x)
+        for i in y:
+            result += int(i)
+        return result
+
+def div9(x):
+    if x < 0:
+        return div9(-x)
+    elif x == 0:
+        return True
+    elif x == 9:
+        return True 
+    elif x < 10:
+        return False 
+    else:
+        return div9(digit_sum(x))
+
+def test_A2():
+    for x in [9 ,18 ,9000 , 25689 , 24606]:
+        print ( div9 ( x ) , end = " " )
+
+#test_A2()
+
+def is_prime(n):
+    """ Returns true if n is prime
+    """
+    if n <= 1:
+        return False
+    else:
+        is_prime = True
+        for i in range(2, int(math.sqrt(n)) + 1):
+            if n % i == 0:
+                is_prime = False
+                break
+        return is_prime
+
+def sum_prime_new(x): ##Exercise A1
+    if x <= 1 :
+        return 0
+    else:
+        if is_prime(x) == True:
+            return x + sum_prime_new(x-1)
+        else:
+            return sum_prime_new(x-1)
+
+def test_sum_prime():
+    for x in [4 ,5 ,6 ,7 ,100]:
+        print ( sum_prime_new ( x ) , end = " " )
+
+#test_sum_prime()
+
+
+##A2 => supa inefficnet, is prime is called n times aswell as sumprime
+
+
+##B1
+
+def base_11(x):
+    if x < 0:
+        return '-' + base_11(-x)
+    elif x <= 9:
+        return str(x) 
+    elif x == 10:
+        return 'A'
+    else:
+        return  str(base_11(x // 11)) + base_11(x % 11)
+
+
+def test_b1():
+    for x in [9 , 44 , 120 , 1000 ,1111]:
+        print ( base_11 ( x ) , end = " " )
+
+#test_b1()
